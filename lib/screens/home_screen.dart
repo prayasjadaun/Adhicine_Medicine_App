@@ -133,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: _onItemTapped,
           ),
           Positioned(
-            bottom: 5,
+            bottom: 3,
             child: FloatingActionButton(
               backgroundColor: Colors.black,
               onPressed: () {
