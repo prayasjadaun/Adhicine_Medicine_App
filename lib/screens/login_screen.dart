@@ -11,6 +11,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+
   String email = '';
   String password = '';
   String fullname = '';
@@ -26,16 +27,18 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Form(
         key: _formKey,
         child: Container(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(14),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // FULL NAME-------------------
+              // ======== Full Name ========
               login
                   ? Container()
                   : TextFormField(
                       key: ValueKey('fullname'),
-                      decoration: InputDecoration(hintText: 'Enter Full Name'),
+                      decoration: InputDecoration(
+                        hintText: 'Enter Full Name',
+                      ),
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please Enter Full Name';
@@ -49,10 +52,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         });
                       },
                     ),
-              //   ========Email=====================
+
+              // ======== Email ========
               TextFormField(
                 key: ValueKey('email'),
-                decoration: InputDecoration(hintText: 'Enter Email'),
+                decoration: InputDecoration(
+                  hintText: 'Enter Email',
+                ),
                 validator: (value) {
                   if (value!.isEmpty || !value.contains('@')) {
                     return 'Please Enter valid Email';
@@ -66,9 +72,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   });
                 },
               ),
+              // ======== Password ========
               TextFormField(
                 key: ValueKey('password'),
-                decoration: InputDecoration(hintText: 'Enter Password'),
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: 'Enter Password',
+                ),
                 validator: (value) {
                   if (value!.length < 6) {
                     return 'Please Enter Password of min length 6';
@@ -83,37 +93,37 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
               SizedBox(
-                height: 10,
+                height: 30,
               ),
+
+              // ===============Button===========================
               Container(
                 height: 55,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      login
-                          ? AuthServices.signInUser(email, password, context)
-                          : AuthServices.signupUser(
-                              email, password, fullname, context);
-                    }
-                  },
-                  child: Text(login ? 'Login' : 'SignUp'),
-                ),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        login
+                            ? AuthServices.signInUser(email, password, context)
+                            : AuthServices.signupUser(
+                                email, password, fullname, context);
+                      }
+                    },
+                    child: Text(login ? 'Login' : 'Signup')),
               ),
               SizedBox(
                 height: 10,
               ),
               TextButton(
-                onPressed: () {
-                  setState(() {
-                    login = !login;
-                  });
-                },
-                child: Text(login
-                    ? "Don't have an account? Signup"
-                    : "Already have an account? Login"),
-              )
+                  onPressed: () {
+                    setState(() {
+                      login = !login;
+                    });
+                  },
+                  child: Text(login
+                      ? "Don't have an account? Signup"
+                      : "Already have an account? Login"))
             ],
           ),
         ),
