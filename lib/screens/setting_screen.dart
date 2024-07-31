@@ -1,10 +1,10 @@
+import 'package:adhicine_project_assignment/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'login_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +19,13 @@ class SettingsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ListTile(
-              leading: const CircleAvatar(
+            const ListTile(
+              leading: CircleAvatar(
                 backgroundImage: AssetImage('assets/images/lady.jpeg'),
                 radius: 30,
               ),
-              title: const Text('Take Care!', style: TextStyle(fontSize: 18)),
-              subtitle: const Text(
+              title: Text('Take Care!', style: TextStyle(fontSize: 18)),
+              subtitle: Text(
                 'Richa Bose',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
@@ -176,7 +176,7 @@ class SettingsScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          LoginScreen()), // Replace with your login screen route
+                          LogInScreen()), // Replace with your login screen route
                   (route) =>
                       false, // Prevents user from going back to settings screen
                 );
@@ -187,12 +187,13 @@ class SettingsScreen extends StatelessWidget {
                   width: 200,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.grey,
+                    color: Colors.red,
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: const Center(
-                    child: Text('LogOut',
+                    child: Text('Logout',
                         style: TextStyle(
+                          color: Colors.white,
                             fontSize: 20, fontWeight: FontWeight.bold)),
                   ),
                 ),

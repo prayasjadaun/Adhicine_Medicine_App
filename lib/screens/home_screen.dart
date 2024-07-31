@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:adhicine_project_assignment/screens/med_reminder_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:adhicine_project_assignment/screens/add_medicine_screen.dart';
@@ -15,11 +17,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  StreamSubscription<User?>? _authStateListener;
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
   User? _user;
   List<dynamic> _medicines = [];
-  bool _isConnected = true; // Update this based on actual connectivity
+  bool _isConnected = true;
   int _selectedIndex = 0;
 
   @override
@@ -31,10 +34,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _getCurrentUser() {
-    _auth.authStateChanges().listen((user) {
-      setState(() {
-        _user = user;
-      });
+    _authStateListener = FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (mounted) {
+        setState(() {
+          _user = user;
+        });
+      }
     });
   }
 
@@ -49,6 +54,12 @@ class _HomeScreenState extends State<HomeScreen> {
         _medicines = snapshot.docs.map((doc) => doc.data()).toList();
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _authStateListener?.cancel(); // Cancel the listener when the widget is disposed
+    super.dispose();
   }
 
   void _checkConnectivity() async {
@@ -69,9 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => MedReminderScreen()
-                ),
+                MaterialPageRoute(builder: (context) => MedReminderScreen()),
               );
             },
           ),
@@ -113,27 +122,30 @@ class _HomeScreenState extends State<HomeScreen> {
           ? null // Remove floating action button from here
           : null,
       bottomNavigationBar: Stack(
-
-        alignment: Alignment.center,
+        alignment: Alignment.topCenter, // Align items to the top center of the stack
         children: [
-          BottomNavigationBar(
-            backgroundColor: Colors.grey.shade100,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.bar_chart),
-                label: 'Reports',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: Colors.blue.shade800,
-            onTap: _onItemTapped,
+          Container(
+            height: MediaQuery.of(context).size.height * 0.10,
+            child: BottomNavigationBar(
+
+              backgroundColor: Colors.white,
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.bar_chart),
+                  label: 'Reports',
+                ),
+              ],
+              currentIndex: _selectedIndex,
+              selectedItemColor: Colors.blue.shade800,
+              onTap: _onItemTapped,
+            ),
           ),
           Positioned(
-            bottom: 3,
+            top: 0, // Adjust this value to position the FAB correctly
             child: FloatingActionButton(
               backgroundColor: Colors.black,
               onPressed: () {
@@ -218,7 +230,6 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
     }
   }
-
 
   void _handleWiFi() async {
     bool isEnabled = await WiFiForIoTPlugin.isEnabled();
